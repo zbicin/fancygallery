@@ -1,0 +1,13 @@
+extends layout
+
+block content
+  form(action="/add", method="post")
+    input(type="file", name="pictureFile")
+    input(type="text", name="categoryName")
+    
+    ul
+    each category in categories
+      li 
+        = category.DISTINCT
+    button(type="submit") Add
+    

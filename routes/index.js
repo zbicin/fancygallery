@@ -25,8 +25,19 @@ var seedData = {
 router.get('/', function (req, res, next) {
   models.Picture.findAll().then(function (pictures) {
     res.render('index', {
-      pictures: pictures
+      pictures: pictures,
+      isAuthenticated: true
     });
+  });
+});
+
+router.get('/add', function(req, res, next) {
+  models.Picture.aggregate('categoryName', 'DISTINCT', { 
+    plain: false
+  }).then(function(categories) {
+    res.render('add', {
+      categories: categories 
+    });  
   });
 });
 
