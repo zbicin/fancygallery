@@ -3,6 +3,7 @@ var multer = require('multer');
 var fs = require('fs');
 var qfs = require('q-io/fs');
 var models = require('../models');
+var thumbnails = require('../custom_modules/thumbnails');
 
 var uploads = multer({ dest: 'uploads/' });
 var router = express.Router();
@@ -47,10 +48,13 @@ router.get('/add', function (req, res, next) {
 });
 
 router.post('/add', [uploads.single('pictureFile'), function (req, res) {
+  var thumbnailPath = req.file.path+'_thumb';
   models.Picture.create({
     categoryName: req.body.categoryName,
     url: req.file.path,
-    thumbnailUrl: req.file.path
+    thumbnailUrl: thumbnailPath
+  }).then(function() {
+    return thumbnails.generate(req.file.path, thumbnailPath);
   }).then(function () {
     res.redirect('/');
   });
@@ -62,7 +66,9 @@ router.get('/remove/:pictureId', function (req, res, next) {
       id: req.params.pictureId
     }
   }).then(function (picture) {
-    return qfs.remove(picture[0].url);
+    return [picture, qfs.remove(picture[0].url)];
+  }).spread(function (picture) {
+    return qfs.remove(picture[0].thumbnailUrl);
   }).then(function () {
     return models.Picture.destroy({
       where: {
