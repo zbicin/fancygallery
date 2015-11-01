@@ -1,6 +1,11 @@
 var express = require('express');
-var router = express.Router();
+var multer = require('multer');
+var fs = require('fs');
+var qfs = require('q-io/fs');
 var models = require('../models');
+
+var uploads = multer({ dest: 'uploads/' });
+var router = express.Router();
 
 var seedData = {
   'Nature': [
@@ -31,14 +36,42 @@ router.get('/', function (req, res, next) {
   });
 });
 
-router.get('/add', function(req, res, next) {
-  models.Picture.aggregate('categoryName', 'DISTINCT', { 
+router.get('/add', function (req, res, next) {
+  models.Picture.aggregate('categoryName', 'DISTINCT', {
     plain: false
-  }).then(function(categories) {
+  }).then(function (categories) {
     res.render('add', {
-      categories: categories 
-    });  
+      categories: categories
+    });
   });
+});
+
+router.post('/add', [uploads.single('pictureFile'), function (req, res) {
+  models.Picture.create({
+    categoryName: req.body.categoryName,
+    url: req.file.path,
+    thumbnailUrl: req.file.path
+  }).then(function () {
+    res.redirect('/');
+  });
+}]);
+
+router.get('/remove/:pictureId', function (req, res, next) {
+  models.Picture.findAll({
+    where: {
+      id: req.params.pictureId
+    }
+  }).then(function (picture) {
+    return qfs.remove(picture[0].url);
+  }).then(function () {
+    return models.Picture.destroy({
+      where: {
+        id: req.params.pictureId
+      }
+    });
+  }).then(function () {
+    res.redirect('/');
+  }).catch(console.error);
 });
 
 router.get('/init', function (req, res, next) {
@@ -48,12 +81,10 @@ router.get('/init', function (req, res, next) {
         categoryName: category,
         url: url,
         thumbnailUrl: url
-      }).catch(function(error) {
-        console.error(error);
-      });
+      }).catch(console.error);
     });
   }
-  
+
   res.send('done');
 });
 

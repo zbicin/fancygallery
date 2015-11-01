@@ -13,7 +13,9 @@
     "jade": "~1.11.0",
     "less-middleware": "1.0.x",
     "morgan": "~1.6.1",
+    "multer": "^1.1.0",
     "mysql": "^2.9.0",
+    "q-io": "^1.13.1",
     "sequelize": "^3.13.0",
     "sequelize-cli": "^2.0.0",
     "serve-favicon": "~2.3.0"

@@ -1,8 +1,8 @@
 extends layout
 
 block content
-  form(action="/add", method="post")
-    input(type="file", name="pictureFile")
+  form(action="/add", method="post", enctype="multipart/form-data")
+    input(type="file", name="pictureFile", id="pictureFile")
     input(type="text", name="categoryName")
     
     ul
