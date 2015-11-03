@@ -1,13 +1,22 @@
 extends layout
 
 block content
-  form(action="/add", method="post", enctype="multipart/form-data")
-    input(type="file", name="pictureFile", id="pictureFile")
-    input(type="text", name="categoryName")
+  form(action="/add", method="post", enctype="multipart/form-data", class="form")
+    div(class="form-group")
+      label Picture file
+      input(type="file", name="pictureFile", id="pictureFile", class="form-control", required)
+      
+    div(class="form-group")
+      label Category name
+      input(type="text", name="categoryName", class="form-control", id="categoryName", required)
+      
+      p(class="help-block") Categories used in past:
+      
+      ul(class="text-muted")
+      each category in categories
+        li 
+          a(href="#", onclick="document.getElementById('categoryName').value='"+category.DISTINCT + "'") 
+            = category.DISTINCT
     
-    ul
-    each category in categories
-      li 
-        = category.DISTINCT
-    button(type="submit") Add
-    
+    a(href="/", class="btn btn-default") Go back
+    button(type="submit", class="btn btn-primary") Add
