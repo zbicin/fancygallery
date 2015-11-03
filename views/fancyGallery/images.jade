@@ -1,3 +1,4 @@
 button(type="button", class="fg-backToCategories") Back
 each picture in pictures
-	img(src=picture.thumbnailUrl, width="100")
+	div(class="fg-image-wrapper")
+		div(class="fg-image", data-thumbnail-url=picture.thumbnailUrl, data-url=picture.url)

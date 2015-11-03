@@ -5,10 +5,10 @@
 			images: {}	
 		},
 		_elements: {
-			container: null
+			$container: null
 		},
 		_cacheDOMLookups: function () {
-			FG._elements.container = $(".fg-container");
+			FG._elements.$container = $(".fg-container");
 		},
 		_fetchCategories: function (callback) {
 			$.get('/fancyGallery/categories', callback);
@@ -40,27 +40,44 @@
 			$('body').on('click', '.fg-category', function (e) {
 				e.preventDefault();
 				var categoryName = $(this).data('categoryName');
-				FG._fetchImages(categoryName, function (imagesHtml) {
-					FG._setContent(imagesHtml);
-				});
+				FG._switchToImages(categoryName);
 			}).on('click', '.fg-backToCategories', function(e) {
 				e.preventDefault();
 				FG._getCategories(function(categoriesHtml) {
-					FG._setContent(categoriesHtml);
+					FG._switchToCategories(categoriesHtml);
 				});
 			});
 		},
+		_loadImages: function() {
+			var $imageElements = $('.fg-image');
+			$imageElements.each(function(index, element) {
+				var image = new Image();
+				var $element = $(element); 
+				image.onload = function() {
+					$element.css('backgroundImage', 'url("' + this.src + '")');
+				};
+				image.src = $element.data('thumbnailUrl');
+			});
+		},
 		_setContent: function (html) {
-			FG._elements.container.html(html);
+			FG._elements.$container.html(html);
+		},
+		_switchToCategories: function() {
+			FG._getCategories(function(categoriesHtml) {
+				FG._setContent(categoriesHtml);
+			});
+		},
+		_switchToImages: function(categoryName) {
+			FG._getImages(categoryName, function (imagesHtml) {
+				FG._setContent(imagesHtml);
+				FG._loadImages();			
+			});
 		},
 		init: function () {
 			FG._cacheDOMLookups();
 			FG._initListeners();
 
-			FG._getCategories(function (categoriesHtml) {
-				FG._setContent(categoriesHtml);
-			});
-
+			FG._switchToCategories();
 		}
 	};
 
