@@ -29,10 +29,11 @@ var seedData = {
 };
 
 router.get('/', function (req, res, next) {
-  models.Picture.findAll().then(function (pictures) {
+  models.Picture.aggregate('categoryName', 'DISTINCT', {
+    plain: false
+  }).then(function (categories) {
     res.render('index', {
-      pictures: pictures,
-      isAuthenticated: true
+      categories: categories
     });
   });
 });

@@ -1,10 +1,7 @@
 extends layout\gallery
 
 block content
+  div(class="fg-container")
+  hr
   a(href="/add") Add new
-  ul
-  each picture in pictures
-    li 
-      = picture.url 
-      &nbsp;
-      a(href="/remove/"+picture.id) Remove
+  
