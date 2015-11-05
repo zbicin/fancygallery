@@ -1,14 +1,17 @@
 (function ($) {
+	'use strict';
 	var FG = {
 		_cachedResults: {
 			categories: null,
 			images: {}	
 		},
 		_elements: {
-			$container: null
+			$container: null,
+			$preview: null
 		},
 		_cacheDOMLookups: function () {
-			FG._elements.$container = $(".fg-container");
+			FG._elements.$container = $('.fg-container');
+			FG._elements.$preview = $('.fg-preview');
 		},
 		_fetchCategories: function (callback) {
 			$.get('/fancyGallery/categories', callback);
@@ -36,6 +39,14 @@
 				callback(FG._cachedResults.images[categoryName]);
 			}
 		},
+		_hidePreview: function() {
+			var transitionTime = FG._elements.$preview.css('transitionDuration');
+			var transitionTimeInMs = parseFloat(transitionTime.replace('s', '')) * 1000;
+			FG._elements.$preview.css('opacity', '0');
+			setTimeout(function() {
+				FG._elements.$preview.css('display', 'none');
+			}, transitionTimeInMs);
+		},
 		_initListeners: function () {
 			$('body').on('click', '.fg-category', function (e) {
 				e.preventDefault();
@@ -46,21 +57,43 @@
 				FG._getCategories(function(categoriesHtml) {
 					FG._switchToCategories(categoriesHtml);
 				});
+			}).on('animationend webkitAnimationEnd oanimationend MSAnimationEnd', '.fg-image, .fg-backdrop, .fg-preview', function(e) {
+				$(this).removeClass(e.originalEvent.animationName);
+			}).on('click', '.fg-image', function(event) {
+				event.preventDefault();
+				FG._showPreview($(this).data('url'));
+			}).on('click', '.fg-preview', function() {
+				FG._hidePreview();
 			});
 		},
 		_loadImages: function() {
 			var $imageElements = $('.fg-image');
 			$imageElements.each(function(index, element) {
-				var image = new Image();
 				var $element = $(element); 
-				image.onload = function() {
-					$element.css('backgroundImage', 'url("' + this.src + '")');
-				};
-				image.src = $element.data('thumbnailUrl');
+				FG._preloadImage($(element).data('thumbnailUrl'), function() {
+					$element
+						.css('backgroundImage', 'url("' + this.src + '")')
+						.addClass('flipInY');
+				});
 			});
+		},
+		_preloadImage: function(url, callback) {
+			var virtualImage = new Image();
+			virtualImage.onload = callback;
+			virtualImage.src = url;
 		},
 		_setContent: function (html) {
 			FG._elements.$container.html(html);
+		},
+		_showPreview: function(url) {
+			FG._elements.$preview.css('background-image', '');
+			FG._preloadImage(url, function() {
+				FG._elements.$preview.css('background-image', 'url("' + this.src + '")');							
+			});
+			
+			FG._elements.$preview.css('display', 'block');
+				FG._elements.$preview.css('opacity', '1');
+			
 		},
 		_switchToCategories: function() {
 			FG._getCategories(function(categoriesHtml) {

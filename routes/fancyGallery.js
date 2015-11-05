@@ -1,8 +1,9 @@
+'use strict';
 var express = require('express');
 var router = express.Router();
 var models = require('../models');
 
-router.get('/images/:categoryName', function(req, res, next) {
+router.get('/images/:categoryName', function(req, res) {
   models.Picture.findAll({
     where: {
       categoryName: req.params.categoryName
@@ -14,7 +15,7 @@ router.get('/images/:categoryName', function(req, res, next) {
   });
 });
 
-router.get('/categories', function(req, res, next) {
+router.get('/categories', function(req, res) {
   models.Picture.aggregate('categoryName', 'DISTINCT', {
     plain: false
   }).then(function (categories) {
