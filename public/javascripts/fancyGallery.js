@@ -3,7 +3,7 @@
 	var FG = {
 		_cachedResults: {
 			categories: null,
-			images: {}	
+			images: {}
 		},
 		_elements: {
 			$container: null,
@@ -19,9 +19,9 @@
 		_fetchImages: function (categoryName, callback) {
 			$.get('/fancyGallery/images/' + categoryName, callback);
 		},
-		_getCategories: function(callback) {
-			if(!FG._cachedResults.categories) {
-				FG._fetchCategories(function(categoriesHtml) {
+		_getCategories: function (callback) {
+			if (!FG._cachedResults.categories) {
+				FG._fetchCategories(function (categoriesHtml) {
 					FG._cachedResults.categories = categoriesHtml;
 					callback(categoriesHtml);
 				});
@@ -29,9 +29,9 @@
 				callback(FG._cachedResults.categories);
 			}
 		},
-		_getImages: function(categoryName, callback) {
-			if(!FG._cachedResults.images[categoryName]) {
-				FG._fetchImages(categoryName, function(picturesHtml) {
+		_getImages: function (categoryName, callback) {
+			if (!FG._cachedResults.images[categoryName]) {
+				FG._fetchImages(categoryName, function (picturesHtml) {
 					FG._cachedResults.images[categoryName] = picturesHtml;
 					callback(picturesHtml);
 				});
@@ -39,11 +39,11 @@
 				callback(FG._cachedResults.images[categoryName]);
 			}
 		},
-		_hidePreview: function() {
+		_hidePreview: function () {
 			var transitionTime = FG._elements.$preview.css('transitionDuration');
-			var transitionTimeInMs = parseFloat(transitionTime.replace('s', '')) * 1000;
+			var transitionTimeInMs = parseFloat(transitionTime.replace('s', '')) * 1500;
 			FG._elements.$preview.css('opacity', '0');
-			setTimeout(function() {
+			setTimeout(function () {
 				FG._elements.$preview.css('display', 'none');
 			}, transitionTimeInMs);
 		},
@@ -52,32 +52,52 @@
 				e.preventDefault();
 				var categoryName = $(this).data('categoryName');
 				FG._switchToImages(categoryName);
-			}).on('click', '.fg-backToCategories', function(e) {
+			}).on('click', '.fg-backToCategories', function (e) {
 				e.preventDefault();
-				FG._getCategories(function(categoriesHtml) {
+				FG._getCategories(function (categoriesHtml) {
 					FG._switchToCategories(categoriesHtml);
 				});
-			}).on('animationend webkitAnimationEnd oanimationend MSAnimationEnd', '.fg-image, .fg-backdrop, .fg-preview', function(e) {
+			}).on('animationend webkitAnimationEnd oanimationend MSAnimationEnd', '.fg-image, .fg-backdrop, .fg-preview', function (e) {
 				$(this).removeClass(e.originalEvent.animationName);
-			}).on('click', '.fg-image', function(event) {
+			}).on('click', '.fg-image', function (event) {
 				event.preventDefault();
 				FG._showPreview($(this).data('url'));
-			}).on('click', '.fg-preview', function() {
+			}).on('click', '.fg-preview', function () {
 				FG._hidePreview();
 			});
 		},
-		_loadImages: function() {
-			var $imageElements = $('.fg-image');
-			$imageElements.each(function(index, element) {
-				var $element = $(element); 
-				FG._preloadImage($(element).data('thumbnailUrl'), function() {
+		_loadCategories: function () {
+			var $categoriesElements = $('.fg-category');
+			var delay = 200;
+
+			$categoriesElements.each(function (index, element) {
+				var $element = $(element);
+				setTimeout(function () {
 					$element.children()
-						.css('backgroundImage', 'url("' + this.src + '")')
-						.addClass('flipInY');
+						.addClass('fadeInDownSmall');
+				}, delay * index);
+			});
+		},
+		_loadImages: function () {
+			var $imageElements = $('.fg-image');
+			var delay = 200;
+			var loadedImagesCount = 0;
+
+			$imageElements.each(function (index, element) {
+				var $element = $(element);
+				FG._preloadImage($(element).data('thumbnailUrl'), function () {
+					var src = this.src;
+					loadedImagesCount++;
+					setTimeout(function () {
+						loadedImagesCount--;
+						$element.children()
+							.css('backgroundImage', 'url("' + src + '")')
+							.addClass('fadeInDownSmall');
+					}, delay * loadedImagesCount);
 				});
 			});
 		},
-		_preloadImage: function(url, callback) {
+		_preloadImage: function (url, callback) {
 			var virtualImage = new Image();
 			virtualImage.onload = callback;
 			virtualImage.src = url;
@@ -85,26 +105,46 @@
 		_setContent: function (html) {
 			FG._elements.$container.html(html);
 		},
-		_showPreview: function(url) {
+		_showPreview: function (url) {
 			FG._elements.$preview.css('background-image', '');
-			FG._preloadImage(url, function() {
-				FG._elements.$preview.css('background-image', 'url("' + this.src + '")');							
+			FG._preloadImage(url, function () {
+				FG._elements.$preview.css('background-image', 'url("' + this.src + '")');
 			});
-			
+
 			FG._elements.$preview.css('display', 'block');
-				FG._elements.$preview.css('opacity', '1');
-			
+			FG._elements.$preview.css('opacity', '1');
+
 		},
-		_switchToCategories: function() {
-			FG._getCategories(function(categoriesHtml) {
-				FG._setContent(categoriesHtml);
+		_switchToCategories: function () {
+			FG._getCategories(function (categoriesHtml) {
+				FG._tilesExit(function () {
+					FG._setContent(categoriesHtml);
+					FG._loadCategories();
+				});
 			});
 		},
-		_switchToImages: function(categoryName) {
+		_switchToImages: function (categoryName) {
 			FG._getImages(categoryName, function (imagesHtml) {
-				FG._setContent(imagesHtml);
-				FG._loadImages();			
+				FG._tilesExit(function () {
+					FG._setContent(imagesHtml);
+					FG._loadImages();
+				});
 			});
+		},
+		_tilesEnter: function () {
+
+		},
+		_tilesExit: function (callback) {
+			var $tilesInners = $('.fg-tile .fg-tile-inner');
+			if ($tilesInners.length > 0) {
+				var animationTime = $tilesInners.first().css('animationDuration');
+				var animationTimeInMs = parseFloat(animationTime.replace('s', '')) * 1500;
+				$tilesInners.addClass('fadeOutDownSmall');
+				setTimeout(callback, animationTimeInMs);
+			}
+			else {
+				callback();
+			}
 		},
 		init: function () {
 			FG._cacheDOMLookups();

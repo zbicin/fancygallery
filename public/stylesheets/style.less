@@ -1,5 +1,47 @@
 @tileSize: 15vw;
 
+@keyframes fadeInDownSmall {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, -20px, 0);
+  }
+  
+  50% {
+	  opacity: 0.5;
+      transform: translate3d(0, 5px, 0);
+  }
+
+  100% {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes fadeOutDownSmall {
+  100% {
+    opacity: 0;
+    transform: translate3d(0, 20px, 0);
+  }
+  
+  50% {
+	  opacity: 0.5;
+      transform: translate3d(0, -5px, 0);
+  }
+
+  0% {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.fadeInDownSmall {
+  animation-name: fadeInDownSmall;
+}
+
+.fadeOutDownSmall {
+	animation-name: fadeOutDownSmall;
+}
+
 body {
 	padding-top: 40px;
 }
@@ -38,20 +80,22 @@ body {
 		cursor: pointer;
 		transition: all ease-in-out 0.2s;
 		background-size: cover;
-		animation-duration: 1s;
+		animation-duration: 0.4s;
 		animation-timing-function: ease-in;
 		animation-iteration-count: 1;
 		transform: perspective(300px);
 		text-align: center;
 		font-size: @tileSize/8;
 		color: #fff;
+		animation-fill-mode: forwards;
+		opacity: 0;
 		
 		&:hover {
-			-moz-transform: perspective(300px) rotateY(10deg);
-			-ms-transform: perspective(300px) rotateY(10deg);
-			-o-transform: perspective(300px) rotateY(10deg);
-			-webkit-transform: perspective(300px) rotateY(10deg);
-			transform: perspective(300px) rotateY(10deg);
+			-moz-transform: perspective(300px) rotateY(5deg);
+			-ms-transform: perspective(300px) rotateY(5deg);
+			-o-transform: perspective(300px) rotateY(5deg);
+			-webkit-transform: perspective(300px) rotateY(15deg);
+			transform: perspective(300px) rotateY(5deg);
 			z-index: 2;
     	}
 		&:before {
