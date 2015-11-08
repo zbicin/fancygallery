@@ -1,0 +1,20 @@
+extends ..\layout\panel
+
+block content
+	p
+		a(href='/panel/add', class='btn btn-default') Add
+	
+	table(class='table table-bordered')
+		thead
+			tr
+				th Thumbnail
+				th Category
+				th Actions
+		each picture in pictures
+			tr
+				td 
+					img(src=picture.url, class='thumbnail')
+				td 
+					= picture.categoryName
+				td
+					a(href='/panel/remove/'+picture.id) Remove

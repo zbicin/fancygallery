@@ -1,7 +1,7 @@
-extends layout\panel
+extends ..\layout\panel
 
 block content
-  form(action="/add", method="post", enctype="multipart/form-data", class="form")
+  form(action="/panel/add", method="post", enctype="multipart/form-data", class="form")
     div(class="form-group")
       label Picture file
       input(type="file", name="pictureFile", id="pictureFile", class="form-control", required)
@@ -18,5 +18,5 @@ block content
           a(href="#", onclick="document.getElementById('categoryName').value='"+category.DISTINCT + "'") 
             = category.DISTINCT
     
-    a(href="/", class="btn btn-default") Go back
+    a(href="/panel", class="btn btn-default") Go back
     button(type="submit", class="btn btn-primary") Add
