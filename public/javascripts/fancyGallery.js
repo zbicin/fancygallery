@@ -40,12 +40,7 @@
 			}
 		},
 		_hidePreview: function () {
-			var transitionTime = FG._elements.$preview.css('transitionDuration');
-			var transitionTimeInMs = parseFloat(transitionTime.replace('s', '')) * 1500;
-			FG._elements.$preview.css('opacity', '0');
-			setTimeout(function () {
-				FG._elements.$preview.css('display', 'none');
-			}, transitionTimeInMs);
+			FG._elements.$preview.hide();
 		},
 		_initListeners: function () {
 			$('body').on('click', '.fg-category', function (e) {
@@ -106,13 +101,9 @@
 			FG._elements.$container.html(html);
 		},
 		_showPreview: function (url) {
-			FG._elements.$preview.css('background-image', '');
-			FG._preloadImage(url, function () {
-				FG._elements.$preview.css('background-image', 'url("' + this.src + '")');
-			});
-
-			FG._elements.$preview.css('display', 'block');
-			FG._elements.$preview.css('opacity', '1');
+			FG._elements.$preview
+				.css('background-image', 'url("' + url + '")')
+				.show();
 
 		},
 		_switchToCategories: function () {
