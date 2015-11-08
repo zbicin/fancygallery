@@ -71,7 +71,7 @@
 			$imageElements.each(function(index, element) {
 				var $element = $(element); 
 				FG._preloadImage($(element).data('thumbnailUrl'), function() {
-					$element
+					$element.children()
 						.css('backgroundImage', 'url("' + this.src + '")')
 						.addClass('flipInY');
 				});

@@ -1,11 +1,6 @@
-each category in categories
-	div(class="fg-category",)
-		= category.DISTINCT
-		
 div(class="text-center")
 	a(href="/add", class="btn btn-default") Add
 each category in categories
-	div(class="fg-tile-wrapper")
-		div(class="fg-tile fg-category", data-category-name=category.DISTINCT)
-			span 
-				= category.DISTINCT
+	div(class="fg-tile fg-category", data-category-name=category.DISTINCT)
+		div(class="fg-tile-inner")
+			= category.DISTINCT

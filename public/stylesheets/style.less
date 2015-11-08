@@ -1,3 +1,5 @@
+@tileSize: 15vw;
+
 body {
 	padding-top: 40px;
 }
@@ -17,14 +19,17 @@ body {
 	text-align: center;
 }
 
-.fg-tile-wrapper {
+.fg-tile {
 	display: inline-block;
-	width: 15vw;
-	height: 15vw;
+	width: @tileSize;
+	height: @tileSize;
 	margin: 1vh 1vw;
-	background: url('/images/balls.svg') no-repeat center center;
 	
-	.fg-tile {
+	&.fg-image {
+		background: url('/images/balls.svg') no-repeat center center;	
+	}
+	
+	.fg-tile-inner {
 		width: 100%;
 		height: 100%;
 		display: block;
@@ -37,6 +42,9 @@ body {
 		animation-timing-function: ease-in;
 		animation-iteration-count: 1;
 		transform: perspective(300px);
+		text-align: center;
+		font-size: @tileSize/8;
+		color: #fff;
 		
 		&:hover {
 			-moz-transform: perspective(300px) rotateY(10deg);
@@ -64,5 +72,17 @@ body {
 		&:active:before {
 			opacity: 0.2;
 		}
+	}
+	
+	&.fg-category {
+		.fg-tile-inner {
+			line-height: @tileSize;
+		}
+		
+		&:nth-child(5n+2) .fg-tile-inner {background-color: #18BC9C;}
+		&:nth-child(5n+3) .fg-tile-inner {background-color: #3498DB;}
+		&:nth-child(5n+4) .fg-tile-inner {background-color: #F39C12;}
+		&:nth-child(5n) .fg-tile-inner {background-color: #E74C3C;}
+		&:nth-child(5n+1) .fg-tile-inner {background-color: #2C3E50;}
 	}
 }
