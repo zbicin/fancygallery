@@ -1,9 +1,8 @@
+'use strict';
 var express = require('express');
 var multer = require('multer');
-var fs = require('fs');
 var qfs = require('q-io/fs');
 var models = require('../models');
-var thumbnails = require('../custom_modules/thumbnails');
 var uploads = multer({ dest: 'uploads/' });
 
 var router = express.Router();
@@ -28,7 +27,7 @@ var seedData = {
   ]
 };
 
-router.get('/', function(req, res, next) {
+router.get('/', function(req, res) {
   models.Picture.findAll().then(function(pictures) {
     res.render('panel/index', {
       pictures: pictures
@@ -36,7 +35,7 @@ router.get('/', function(req, res, next) {
   });
 });
 
-router.get('/add', function (req, res, next) {
+router.get('/add', function (req, res) {
   models.Picture.aggregate('categoryName', 'DISTINCT', {
     plain: false
   }).then(function (categories) {
@@ -60,7 +59,7 @@ router.post('/add', [uploads.single('pictureFile'), function (req, res) {
   });
 }]);
 
-router.get('/remove/:pictureId', function (req, res, next) {
+router.get('/remove/:pictureId', function (req, res) {
   models.Picture.findAll({
     where: {
       id: req.params.pictureId
@@ -80,15 +79,17 @@ router.get('/remove/:pictureId', function (req, res, next) {
   }).catch(console.error);
 });
 
-router.get('/init', function (req, res, next) {
-  for (var category in seedData) {
-    seedData[category].forEach(function (url) {
+router.get('/init', function (req, res) {
+  function initSingle (url) {
       models.Picture.create({
         categoryName: category,
         url: url,
         thumbnailUrl: url
       }).catch(console.error);
-    });
+    }
+  
+  for (var category in seedData) {
+    seedData[category].forEach(initSingle);
   }
 
   res.send('done');
