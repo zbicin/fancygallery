@@ -155,4 +155,14 @@ router.get('/init', function (req, res) {
   res.send('done');
 });
 
+router.get('/drop', function(req, res) {
+  models.Message.drop(),then(function() {
+    return models.Picture.drop();
+  }).then(function() {
+    return models.Configuration.drop();
+  }).then(function() {
+    res.send('done');
+  });
+});
+
 module.exports = router;
