@@ -1,4 +1,8 @@
 @tileSize: 15vw;
+@tileSize-sm: 25vw;
+@tileSize-xs: 40vw;
+@breakpoint-sm: 992px;
+@breakpoint-xs: 768px;
 
 @keyframes fadeInDownSmall {
   0% {
@@ -42,6 +46,20 @@
 	animation-name: fadeOutDownSmall;
 }
 
+.fg-container {
+	width: 50vw;
+	margin: auto;
+	text-align: center;
+	
+	@media (max-width: @breakpoint-sm) {
+		width: 75vw;
+	}
+	
+	@media (max-width: @breakpoint-xs) {
+		width: 100vw;
+	}
+}
+
 .fg-preview {
 	position: fixed;
 	top: 0;
@@ -60,6 +78,16 @@
 	width: @tileSize;
 	height: @tileSize;
 	margin: 1vh 1vw;
+	
+	@media (max-width: @breakpoint-sm) {
+		height: @tileSize-sm;
+		width: @tileSize-sm;
+	}
+	
+	@media (max-width: @breakpoint-xs) {
+		height: @tileSize-xs;
+		width: @tileSize-xs;
+	}
 	
 	&.fg-image {
 		background: url('/images/balls.svg') no-repeat center center;	
@@ -83,6 +111,13 @@
 		color: #fff;
 		animation-fill-mode: forwards;
 		opacity: 0;
+	
+		@media (max-width: @breakpoint-sm) {
+			font-size: @tileSize-sm/8;
+		}
+		@media (max-width: @breakpoint-xs) {
+			font-size: @tileSize-xs/8;
+		}
 		
 		&:hover {
 			-moz-transform: perspective(300px) rotateY(5deg);
@@ -115,6 +150,13 @@
 	&.fg-category {
 		.fg-tile-inner {
 			line-height: @tileSize;
+			
+			@media (max-width: @breakpoint-sm) {
+				line-height: @tileSize-sm;
+			}
+			@media (max-width: @breakpoint-xs) {
+				line-height: @tileSize-xs;
+			}
 		}
 		
 		&:nth-child(5n+2) .fg-tile-inner {background-color: #18BC9C;}
