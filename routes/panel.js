@@ -47,7 +47,7 @@ router.post('/', function (req, res) {
   });
 });
 
-router.get('/picutres', function (req, res) {
+router.get('/pictures', function (req, res) {
   models.Picture.findAll().then(function (pictures) {
     res.render('panel/pictures', {
       pictures: pictures
