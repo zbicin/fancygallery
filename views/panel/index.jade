@@ -1,13 +1,14 @@
 extends ../layout/panel
 
 block content
+  h2 Gallery configuration
   form(action="/panel", method="post", class="form")
     div(class="form-group")
-      label Gallery title
+      label Title
       input(type="text", name="title", class="form-control", id="title", value=title, required)
       
     div(class="form-group")
-      label Gallery subtitle
+      label Subtitle
       input(type="text", name="subtitle", class="form-control", id="subtitle", value=subtitle)
       
     div(class="form-group")
