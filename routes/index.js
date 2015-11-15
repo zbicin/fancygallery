@@ -14,4 +14,21 @@ router.get('/', function (req, res) {
   });
 });
 
+router.get('/contact', function (req, res) {
+  res.render('contact');
+});
+
+router.post('/contact', function(req, res) {
+  models.Message.create({
+    author: req.body.author,
+    content: req.body.content
+  }).then(function() {
+    res.redirect('/thanks');
+  });
+});
+
+router.get('/thanks', function(req, res) {
+  res.render('thanks');
+});
+
 module.exports = router;

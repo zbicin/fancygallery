@@ -1,0 +1,18 @@
+extends ../layout/panel
+
+block content
+	div(class='form')
+		div(class='form-group')
+			label Author
+			p(class='form-control-static')
+				= message.author
+		div(class='form-group')
+			label Sent at
+			p(class='form-control-static')
+				= message.createdAt
+		div(class='form-group')
+			label Message
+			pre(class='form-control-static')
+				= message.content
+	
+	a(href="/panel/messages", class="btn btn-default") Go back

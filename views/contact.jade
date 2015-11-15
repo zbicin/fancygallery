@@ -1,0 +1,17 @@
+extends layout/gallery
+
+block content
+  div(class="container")
+    div(class="row")
+      div(class="col-xs-12 col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2 col-lg-6 col-lg-offset-3")
+        form(action="/contact", method="post", class="form")
+            div(class="form-group")
+              label Your email
+              input(type="text", name="author", class="form-control", id="author", required)
+
+            div(class="form-group")
+              label Message
+              textarea(name='content', class="form-control", required)
+
+            button(type="submit", class="btn btn-primary") Send
+            a(href="/", class="btn btn-default") Go back

@@ -39,10 +39,10 @@ router.post('/', function (req, res) {
         }
       });
   }
-  
-  updateSingleEntry('title', req.body.title).then(function() {
+
+  updateSingleEntry('title', req.body.title).then(function () {
     return updateSingleEntry('subtitle', req.body.subtitle);
-  }).then(function() {
+  }).then(function () {
     res.redirect('/panel');
   });
 });
@@ -53,7 +53,7 @@ router.get('/pictures', function (req, res) {
       pictures: pictures
     });
   });
-})
+});
 
 router.get('/add', function (req, res) {
   models.Picture.aggregate('categoryName', 'DISTINCT', {
@@ -100,6 +100,35 @@ router.get('/remove/:pictureId', function (req, res) {
   }).then(function () {
     res.redirect('panel/');
   }).catch(console.error);
+});
+
+router.get('/messages', function (req, res) {
+  models.Message.findAll().then(function (messages) {
+    res.render('panel/messages', {
+      messages: messages
+    });
+  });
+});
+
+router.get('/message/:messageId', function (req, res) {
+  models.Message.findAll({
+    where: {
+      id: req.params.messageId
+    }
+  }).then(function (message) {
+    return [
+      message[0],
+      models.Message.update({
+        isRead: true
+      }, {
+          where: { id: req.params.messageId }
+        })
+    ];
+  }).spread(function (message) {
+    res.render('panel/message', {
+      message: message
+    });
+  });
 });
 
 router.get('/init', function (req, res) {

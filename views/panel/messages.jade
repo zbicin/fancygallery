@@ -1,0 +1,25 @@
+extends ../layout/panel
+
+block content
+
+  table(class='table table-bordered')
+    thead
+      tr
+        th Is read?
+        th Author
+        th Send at
+        th Actions
+    tbody
+    each message in messages
+      tr
+        td
+          if message.isRead
+            &#x2714;
+          else
+            &#x274c;
+        td 
+          = message.author
+        td 
+          = message.createdAt
+        td 
+          a(href='/panel/message/'+message.id) Read
