@@ -19,21 +19,50 @@ var defaultConfigurationEntries = [
 ];
 
 router.get('/', function (req, res) {
-  models.Picture.findAll().then(function (pictures) {
+  models.Configuration.findAll().then(function (configurationEntries) {
+    var title = configurationEntries[0].value;
+    var subtitle = configurationEntries[1].value;
     res.render('panel/index', {
-      pictures: pictures
+      title: title,
+      subtitle: subtitle
     });
   });
 });
+
+router.post('/', function (req, res) {
+  function updateSingleEntry(key, value) {
+    return models.Configuration.update({
+      value: value
+    }, {
+        where: {
+          key: key
+        }
+      });
+  }
+  
+  updateSingleEntry('title', req.body.title).then(function() {
+    return updateSingleEntry('subtitle', req.body.subtitle);
+  }).then(function() {
+    res.redirect('/panel');
+  });
+});
+
+router.get('/picutres', function (req, res) {
+  models.Picture.findAll().then(function (pictures) {
+    res.render('panel/pictures', {
+      pictures: pictures
+    });
+  });
+})
 
 router.get('/add', function (req, res) {
   models.Picture.aggregate('categoryName', 'DISTINCT', {
     plain: false
   }).then(function (categories) {
     return [
-      categories, 
-      models.Picture.aggregate('author', 'DISTINCT', {plain: false})
-      ];
+      categories,
+      models.Picture.aggregate('author', 'DISTINCT', { plain: false })
+    ];
   }).spread(function (categories, authors) {
     res.render('panel/add', {
       categories: categories,
@@ -49,7 +78,7 @@ router.post('/add', [uploads.single('pictureFile'), function (req, res) {
     description: req.body.description,
     author: req.body.author
   }).then(function () {
-    res.redirect('/');
+    res.redirect('/panel/pictures');
   });
 }]);
 

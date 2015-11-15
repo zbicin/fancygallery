@@ -1,26 +1,13 @@
 extends ../layout/panel
 
 block content
-	p
-		a(href='/panel/add', class='btn btn-default') Add
-	
-	table(class='table table-bordered')
-		thead
-			tr
-				th Thumbnail
-				th Category
-				th Author
-				th Description
-				th Actions
-		each picture in pictures
-			tr
-				td 
-					img(src=picture.url, class='thumbnail')
-				td 
-					= picture.categoryName
-				td
-					= picture.author
-				td
-					= picture.description
-				td
-					a(href='/panel/remove/'+picture.id) Remove
+  form(action="/panel", method="post", class="form")
+    div(class="form-group")
+      label Gallery title
+      input(type="text", name="title", class="form-control", id="title", value=title required)
+      
+    div(class="form-group")
+      label Gallery subtitle
+      input(type="text", name="subtitle", class="form-control", id="subtitle", value=subtitle)
+    
+    button(type="submit", class="btn btn-primary") Save changes
