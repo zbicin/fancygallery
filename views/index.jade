@@ -1,11 +1,14 @@
 extends layout/gallery
 
 block content
-  div(class="fg-preview") 
+  div(class='fg-preview') 
+    div(class='fg-infobar')
+      div(class='fg-author')
+      div(class='fg-description')
   
-  div(class="fg-container")
+  div(class='fg-container')
   
  block footer
-    a(href="/panel") Admin panel
+    a(href='/panel') Admin panel
     span 
-    a(href="/contact") Contact form
+    a(href='/contact') Contact form

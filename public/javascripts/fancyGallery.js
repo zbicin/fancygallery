@@ -7,11 +7,17 @@
 		},
 		_elements: {
 			$container: null,
-			$preview: null
+			preview: {
+				$image: null,
+				$author: null,
+				$description: null
+			}
 		},
 		_cacheDOMLookups: function () {
 			FG._elements.$container = $('.fg-container');
-			FG._elements.$preview = $('.fg-preview');
+			FG._elements.preview.$image = $('.fg-preview');
+			FG._elements.preview.$author = $('.fg-author');
+			FG._elements.preview.$description = $('.fg-description');
 		},
 		_fetchCategories: function (callback) {
 			$.get('/fancyGallery/categories', callback);
@@ -40,7 +46,7 @@
 			}
 		},
 		_hidePreview: function () {
-			FG._elements.$preview.hide();
+			FG._elements.preview.$image.hide();
 		},
 		_initListeners: function () {
 			$('body').on('click', '.fg-category', function (e) {
@@ -56,7 +62,11 @@
 				$(this).removeClass(e.originalEvent.animationName);
 			}).on('click', '.fg-image', function (event) {
 				event.preventDefault();
-				FG._showPreview($(this).data('url'));
+				FG._showPreview({
+					author: $(this).data('author'),
+					description: $(this).data('description'),
+					url: $(this).data('url')
+				});
 			}).on('click', '.fg-preview', function () {
 				FG._hidePreview();
 			});
@@ -100,9 +110,11 @@
 		_setContent: function (html) {
 			FG._elements.$container.html(html);
 		},
-		_showPreview: function (url) {
-			FG._elements.$preview
-				.css('background-image', 'url("' + url + '")')
+		_showPreview: function (info) {
+			FG._elements.preview.$author.text(info.author);
+			FG._elements.preview.$description.text(info.description);
+			FG._elements.preview.$image
+				.css('background-image', 'url("' + info.url + '")')
 				.show();
 
 		},
