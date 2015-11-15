@@ -1,17 +1,16 @@
 'use strict';
 
 module.exports = function(sequelize, DataTypes) {
-	var Picture = sequelize.define('Picture', {
+	var Message = sequelize.define('Message', {
 		id: {
 			type: DataTypes.INTEGER,
 			primaryKey: true,
 			autoIncrement: true
 		},
-		categoryName: DataTypes.STRING,
-		description: DataTypes.STRING,
 		author: DataTypes.STRING,
-		url: DataTypes.STRING
+		content: DataTypes.STRING,
+		isRead: DataTypes.BOOLEAN
 	});
 	
-	return Picture;
+	return Message;
 };

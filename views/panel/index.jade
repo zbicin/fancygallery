@@ -9,6 +9,8 @@ block content
 			tr
 				th Thumbnail
 				th Category
+				th Author
+				th Description
 				th Actions
 		each picture in pictures
 			tr
@@ -16,5 +18,9 @@ block content
 					img(src=picture.url, class='thumbnail')
 				td 
 					= picture.categoryName
+				td
+					= picture.author
+				td
+					= picture.description
 				td
 					a(href='/panel/remove/'+picture.id) Remove

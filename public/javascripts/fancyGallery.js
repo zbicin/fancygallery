@@ -80,7 +80,7 @@
 
 			$imageElements.each(function (index, element) {
 				var $element = $(element);
-				FG._preloadImage($(element).data('thumbnailUrl'), function () {
+				FG._preloadImage($(element).data('url'), function () {
 					var src = this.src;
 					loadedImagesCount++;
 					setTimeout(function () {

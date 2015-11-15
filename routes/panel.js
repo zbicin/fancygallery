@@ -7,28 +7,19 @@ var uploads = multer({ dest: 'uploads/' });
 
 var router = express.Router();
 
-var seedData = {
-  'Nature': [
-    'http://lorempixel.com/output/nature-q-c-640-480-1.jpg',
-    'http://lorempixel.com/output/nature-q-c-640-480-2.jpg',
-    'http://lorempixel.com/output/nature-q-c-640-480-3.jpg',
-    'http://lorempixel.com/output/nature-q-c-640-480-4.jpg',
-    'http://lorempixel.com/output/nature-q-c-640-480-5.jpg',
-    'http://lorempixel.com/output/nature-q-c-640-480-6.jpg',
-    'http://lorempixel.com/output/nature-q-c-640-480-7.jpg',
-    'http://lorempixel.com/output/nature-q-c-640-480-8.jpg'
-  ],
-  'City': [
-    'http://lorempixel.com/output/city-q-c-640-480-1.jpg',
-    'http://lorempixel.com/output/city-q-c-640-480-2.jpg',
-    'http://lorempixel.com/output/city-q-c-640-480-3.jpg',
-    'http://lorempixel.com/output/city-q-c-640-480-4.jpg',
-    'http://lorempixel.com/output/city-q-c-640-480-5.jpg'
-  ]
-};
+var defaultConfigurationEntries = [
+  {
+    key: 'title',
+    value: 'My Fancy Gallery'
+  },
+  {
+    key: 'subtitle',
+    value: 'Lorem lipsum'
+  }
+];
 
-router.get('/', function(req, res) {
-  models.Picture.findAll().then(function(pictures) {
+router.get('/', function (req, res) {
+  models.Picture.findAll().then(function (pictures) {
     res.render('panel/index', {
       pictures: pictures
     });
@@ -39,22 +30,25 @@ router.get('/add', function (req, res) {
   models.Picture.aggregate('categoryName', 'DISTINCT', {
     plain: false
   }).then(function (categories) {
+    return [
+      categories, 
+      models.Picture.aggregate('author', 'DISTINCT', {plain: false})
+      ];
+  }).spread(function (categories, authors) {
     res.render('panel/add', {
-      categories: categories
+      categories: categories,
+      authors: authors
     });
   });
 });
 
 router.post('/add', [uploads.single('pictureFile'), function (req, res) {
-//  var thumbnailPath = req.file.path + '_thumb';
-  var thumbnailPath = req.file.path;
   models.Picture.create({
     categoryName: req.body.categoryName,
-    url: '/'+ req.file.path.split('\\').join('/'),
-    thumbnailUrl: thumbnailPath
-  })/*.then(function() {
-    return thumbnails.generate(req.file.path, thumbnailPath);
-  })*/.then(function () {
+    url: '/' + req.file.path.split('\\').join('/'),
+    description: req.body.description,
+    author: req.body.author
+  }).then(function () {
     res.redirect('/');
   });
 }]);
@@ -80,17 +74,17 @@ router.get('/remove/:pictureId', function (req, res) {
 });
 
 router.get('/init', function (req, res) {
-  function initSingle (url) {
-      models.Picture.create({
-        categoryName: category,
-        url: url,
-        thumbnailUrl: url
-      }).catch(console.error);
-    }
-  
-  for (var category in seedData) {
-    seedData[category].forEach(initSingle);
+  function initSingle(entry) {
+    models.Configuration.create(entry).catch(console.error);
   }
+
+  defaultConfigurationEntries.forEach(initSingle);
+
+  models.Message.create({
+    content: 'Lorem lipsum message',
+    author: 'test@example.com',
+    isRead: false
+  }).catch(console.error);
 
   res.send('done');
 });

@@ -17,6 +17,22 @@ block content
         li 
           a(href="#", onclick="document.getElementById('categoryName').value='"+category.DISTINCT + "'") 
             = category.DISTINCT
+            
+    div(class="form-group")
+      label Author
+      input(type="text", name="author", class="form-control", id="author", required)
+
+      p(class="help-block") Recent authors:
+      
+      ul(class="text-muted")
+      each author in authors
+        li 
+          a(href="#", onclick="document.getElementById('author').value='"+author.DISTINCT + "'") 
+            = author.DISTINCT
+            
+    div(class="form-group")
+      label Description
+      input(type="text", name="description", class="form-control", id="description")
     
     a(href="/panel", class="btn btn-default") Go back
     button(type="submit", class="btn btn-primary") Add
