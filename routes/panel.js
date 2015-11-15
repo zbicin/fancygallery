@@ -156,7 +156,7 @@ router.get('/init', function (req, res) {
 });
 
 router.get('/drop', function(req, res) {
-  models.Message.drop(),then(function() {
+  models.Message.drop().then(function() {
     return models.Picture.drop();
   }).then(function() {
     return models.Configuration.drop();
