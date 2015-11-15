@@ -48,8 +48,8 @@ router.post('/', function (req, res) {
 
   updateSingleEntry('title', req.body.title).then(function () {
     return updateSingleEntry('subtitle', req.body.subtitle);
-  }).then(function() {
-    return updateSingleEntry('footer', req.body.footer);    
+  }).then(function () {
+    return updateSingleEntry('footer', req.body.footer);
   }).then(function () {
     res.redirect('/panel');
   });
@@ -144,23 +144,29 @@ router.get('/init', function (req, res) {
     models.Configuration.create(entry).catch(console.error);
   }
 
-  defaultConfigurationEntries.forEach(initSingle);
+  models.Message.sync().then(function () {
+    return models.Picture.sync();
+  }).then(function () {
+    return models.Configuration.sync();
+  }).then(function () {
+    defaultConfigurationEntries.forEach(initSingle);
 
-  models.Message.create({
-    content: 'Lorem lipsum message',
-    author: 'test@example.com',
-    isRead: false
-  }).catch(console.error);
-
-  res.send('done');
+    return models.Message.create({
+      content: 'Lorem lipsum message',
+      author: 'test@example.com',
+      isRead: false
+    });
+  }).then(function () {
+    res.send('done');
+  });
 });
 
-router.get('/drop', function(req, res) {
-  models.Message.drop().then(function() {
+router.get('/drop', function (req, res) {
+  models.Message.drop().then(function () {
     return models.Picture.drop();
-  }).then(function() {
+  }).then(function () {
     return models.Configuration.drop();
-  }).then(function() {
+  }).then(function () {
     res.send('done');
   });
 });
