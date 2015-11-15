@@ -8,6 +8,7 @@ module.exports = function (req, res, next) {
 		 var singleEntry = entries[i];
 		 res.locals.configuration[singleEntry.key] = singleEntry.value;
 	 }
-	 next();
+  }).catch(console.error).done(function() {
+	 next();	  
   });
 };
