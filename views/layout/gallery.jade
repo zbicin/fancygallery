@@ -4,9 +4,17 @@ block head
 	link(rel="stylesheet", href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.4.0/animate.min.css")
 
 block contentWrapper
+	h1 
+		= configuration.title
+	h2
+		= configuration.subtitle
 	block content
 	
-	
+	footer
+		= configuration.footer
+		br
+		block footer
+		
 block scripts
 	script(src="https://code.jquery.com/jquery-2.1.4.min.js")
 	script(src="javascripts/fancyGallery.js")

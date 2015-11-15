@@ -15,6 +15,10 @@ var defaultConfigurationEntries = [
   {
     key: 'subtitle',
     value: 'Lorem lipsum'
+  },
+  {
+    key: 'footer',
+    value: '&copy;2015 Footer goes here.'
   }
 ];
 
@@ -22,9 +26,11 @@ router.get('/', function (req, res) {
   models.Configuration.findAll().then(function (configurationEntries) {
     var title = configurationEntries[0].value;
     var subtitle = configurationEntries[1].value;
+    var footer = configurationEntries[2].value;
     res.render('panel/index', {
       title: title,
-      subtitle: subtitle
+      subtitle: subtitle,
+      footer: footer
     });
   });
 });
@@ -42,6 +48,8 @@ router.post('/', function (req, res) {
 
   updateSingleEntry('title', req.body.title).then(function () {
     return updateSingleEntry('subtitle', req.body.subtitle);
+  }).then(function() {
+    return updateSingleEntry('footer', req.body.footer);    
   }).then(function () {
     res.redirect('/panel');
   });
