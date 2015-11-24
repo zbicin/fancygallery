@@ -5,7 +5,7 @@
   "scripts": {
     "start": "node ./server.js"
   },
-  "main": "node ./server.js",
+  "main": "./server.js",
   "dependencies": {
     "basic-auth": "^1.0.3",
     "body-parser": "~1.13.2",
