@@ -96,9 +96,7 @@ router.get('/remove/:pictureId', function (req, res) {
       id: req.params.pictureId
     }
   }).then(function (picture) {
-    return [picture, qfs.remove(picture[0].url)];
-  }).spread(function (picture) {
-    return qfs.remove(picture[0].thumbnailUrl);
+    return qfs.remove(picture[0].url);
   }).then(function () {
     return models.Picture.destroy({
       where: {
@@ -106,7 +104,7 @@ router.get('/remove/:pictureId', function (req, res) {
       }
     });
   }).then(function () {
-    res.redirect('panel/');
+    res.redirect('panel/pictures');
   }).catch(console.error);
 });
 
