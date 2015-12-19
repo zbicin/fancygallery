@@ -4,10 +4,10 @@
  * Module dependencies.
  */
 
-var app = require('../app');
+var app = require('./app');
 var debug = require('debug')('fancygallery:server');
 var http = require('http');
-var models = require('../models');
+var models = require('./models');
 
 /**
  * Get port from environment and store in Express.
