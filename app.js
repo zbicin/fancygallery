@@ -24,7 +24,7 @@ app.use(require('less-middleware')(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', routes);
-app.use('/panel', auth, panel);
+app.use('/panel', /*auth,*/ panel); // disabled auth for demonstration purposes
 app.use('/fancyGallery', fancyGalleryRoutes);
 app.use('/uploads', express.static('uploads'));
 
